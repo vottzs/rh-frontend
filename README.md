@@ -1,5 +1,7 @@
 # rh-frontend
 
+Before to start, open client folder.
+
 ## Project setup
 ```
 npm install
