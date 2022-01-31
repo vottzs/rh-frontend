@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import StaticJobPostings from '../views/StaticJobPostings.vue';
+import JobPostings from '../views/JobPostings.vue';
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/static_job_posting',
     name: 'Static Job Postings',
     component: StaticJobPostings,
+  },
+  {
+    path: '/job_posting',
+    name: 'Job Postings',
+    component: JobPostings,
   },
 ];
 

@@ -104,5 +104,8 @@
 </template>
 
 <style scoped>
-
+h4{
+  text-align: left;
+  padding-left: 50px;
+}
 </style>
