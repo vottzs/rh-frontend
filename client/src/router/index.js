@@ -26,7 +26,7 @@ const routes = [
     component: StaticJobPostings,
   },
   {
-    path: '/job_postings',
+    path: '/job_posting',
     name: 'Job Postings',
     component: JobPostings,
   },
