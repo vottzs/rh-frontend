@@ -46,7 +46,9 @@
     <b-card no-body>
       <b-tabs card>
         <!-- Render Tabs, supply a unique `key` to each tab -->
-        <b-tab v-for="stage in hiring_stages" :key="'dyn-tab-' + stage" :title="stage">
+        <b-tab
+          v-for="stage in hiring_stages" :key="'dyn-tab-' + stage" :title="stage"
+          v-on:click="get_candidates(stage)">
           <b-table :items="candidates" :fields="fields" striped responsive="sm">
             <template #cell(actions)="row">
               <b-button size="sm" class="mr-2" @click="archive_candidate(row.item, row.index)">
@@ -69,10 +71,12 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      hiring_stages: ['Applied', 'Resume Analysis', 'Interview'],
+      hiring_stages: [],
       fields: ['name', 'applied_on', 'stage', 'last_modified_on', 'actions'],
       job_posting: {
         title: 'Quality Assurance',
@@ -83,50 +87,11 @@ export default {
         status: 'Published',
       },
       candidates: [
-        {
-          name: 'Michelangelo',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Michelangelo@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Leonardo',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Leonardo@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Donatello',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Donatello@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Rafael',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Rafael@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Splinter',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Splinter@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
       ],
       selected_candidate: {
       },
       selected_hiring_stage: '',
+      selected_tab: '',
     };
   },
   methods: {
@@ -134,7 +99,14 @@ export default {
       this.selected_candidate = candidate;
     },
     move_candidate() {
-      this.selected_candidate.stage = this.selected_hiring_stage;
+      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
+      axios
+        .post(url, { stage: this.selected_hiring_stage })
+        .then((response) => {
+          if (response.data.status === 'success') {
+            this.get_candidates(this.selected_tab);
+          }
+        });
       this.selected_hiring_stage = '';
     },
     archive_candidate(candidate, index) {
@@ -142,6 +114,26 @@ export default {
       this.selected_candidate.stage = 'Archived';
       this.candidates.splice(index, 1);
     },
+    get_candidates(stage) {
+      this.selected_tab = stage;
+      const url = `http://192.168.1.12:7011/api/v1/candidates?stage=${stage}`;
+      axios
+        .get(url)
+        .then((response) => {
+          this.candidates = response.data.candidates;
+        });
+    },
+    get_hiring_stages() {
+      axios
+        .get('http://192.168.1.12:7011/api/v1/hiring_stages')
+        .then((response) => {
+          this.hiring_stages = response.data.hiring_stages;
+        });
+    },
+  },
+  created() {
+    this.get_candidates('Applied');
+    this.get_hiring_stages();
   },
 };
 </script>
