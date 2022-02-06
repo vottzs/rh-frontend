@@ -101,7 +101,7 @@ export default {
     move_candidate() {
       const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
       axios
-        .post(url, { stage: this.selected_hiring_stage })
+        .patch(url, { stage: this.selected_hiring_stage })
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_candidates(this.selected_tab);
@@ -116,7 +116,7 @@ export default {
     },
     get_candidates(stage) {
       this.selected_tab = stage;
-      const url = `http://192.168.1.12:7011/api/v1/candidates?stage=${stage}`;
+      const url = `http://localhost:7011/api/v1/candidates?stage=${stage}`;
       axios
         .get(url)
         .then((response) => {
@@ -125,7 +125,7 @@ export default {
     },
     get_hiring_stages() {
       axios
-        .get('http://192.168.1.12:7011/api/v1/hiring_stages')
+        .get('http://localhost:7011/api/v1/hiring_stages')
         .then((response) => {
           this.hiring_stages = response.data.hiring_stages;
         });
