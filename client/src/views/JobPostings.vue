@@ -1,42 +1,6 @@
 <template>
   <div>
     <b-row>
-      <b-col lg="6" class="my-1">
-        <b-form-group
-          label="Sort"
-          label-for="sort-by-select"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          class="mb-0"
-          v-slot="{ ariaDescribedby }"
-        >
-          <b-input-group size="sm">
-            <b-form-select
-              id="sort-by-select"
-              v-model="sortBy"
-              :options="sortOptions"
-              :aria-describedby="ariaDescribedby"
-              class="w-75"
-            >
-              <template #first>
-                <option value="">-- none --</option>
-              </template>
-            </b-form-select>
-            <b-form-select
-              v-model="sortDesc"
-              :disabled="!sortBy"
-              :aria-describedby="ariaDescribedby"
-              size="sm"
-              class="w-25"
-            >
-              <option :value="false">Asc</option>
-              <option :value="true">Desc</option>
-            </b-form-select>
-          </b-input-group>
-        </b-form-group>
-      </b-col>
-
       <b-col lg="5" class="my-1">
         <b-form-group
           label="Filter"
@@ -128,7 +92,8 @@
     <b-card no-body>
       <b-tabs card>
         <!-- Render Tabs, supply a unique `key` to each tab -->
-        <b-tab v-for="tab_name in hiring_stages" :key="'dyn-tab-' + tab_name" :title="tab_name">
+        <b-tab v-for="Stage in hiring_stages" :key="'dyn-tab-' + Stage" :title="Stage"
+        v-on:click="get_candidates(Stage)">
           <b-table :items="candidates" :fields="fields" striped responsive="sm"
             :filter="filter"
             :filter-included-fields="filterOn"
@@ -160,6 +125,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -203,6 +170,7 @@ export default {
         status: 'Published',
       },
       selected_hiring_stages: '',
+      selected_tab: '',
       candidates: [
         {
           name: 'Michelangelo Tartaruga Ninja',
@@ -277,6 +245,14 @@ export default {
       this.selected_candidate = candidate;
     },
     move_candidate() {
+      const url = `http://192.168.0.37:7011/api/v1/candidates/${this.selected_candidate.id}`;
+      axios
+        .patch(url, { Stage: this.selected_hiring_stages })
+        .then((response) => {
+          if (response.data.stats === 'sucess') {
+            this.get_candidates(this.selected_tab);
+          }
+        });
       this.selected_candidate.Stage = this.selected_hiring_stages;
       this.selected_hiring_stages = '';
     },
@@ -285,6 +261,33 @@ export default {
       this.selected_candidate.Stage = 'Archived';
       this.candidates.splice(index, 1);
     },
+    onFiltered() {
+
+    },
+    get_candidates(Stage) {
+      this.selected_tab = Stage;
+      let newStage = Stage;
+      if (Stage === undefined) {
+        newStage = 'Applied';
+      }
+      const url = `http://192.168.0.37:7011/api/v1/candidates?Stage=${newStage}`;
+      axios
+        .get(url)
+        .then((response) => {
+          this.candidates = response.data.candidates;
+        });
+    },
+    get_hiring_stages() {
+      axios
+        .get('http://192.168.0.37:7011/api/v1/hiring_stages')
+        .then((response) => {
+          this.hiring_stages = response.data.hiring_stages;
+        });
+    },
+  },
+  created() {
+    this.get_candidates();
+    this.get_hiring_stages();
   },
 };
 </script>
