@@ -105,7 +105,7 @@
             small
             @filtered="onFiltered">
             <template #cell(Actions)="row">
-              <b-button size="sm" class="mr-2" @click="archive_cadidate(row.item, row.index)">
+              <b-button size="sm" class="mr-2" @click="archive_cadidate(row.item)">
                 Archive
               </b-button>&nbsp;
               <b-button size="sm" class="mr-2"
@@ -172,56 +172,6 @@ export default {
       selected_hiring_stages: '',
       selected_tab: '',
       candidates: [
-        {
-          name: 'Michelangelo Tartaruga Ninja',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-          phone: '+1 (212) 846-2543',
-          linkedin: 'www.linkedin.com/michelangelo',
-          Applied_On: 'December 10, 1815',
-          Stage: 'Applied',
-          last_modify_on: 'December 10, 1815',
-          email: 'michelangelo@tmnt.com',
-        },
-        {
-          name: 'Leonardo Tartaruga Ninja',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-          phone: '+1 (212) 846-2543',
-          linkedin: 'www.linkedin.com/leonardo',
-          Applied_On: 'December 10, 1815',
-          Stage: 'Applied',
-          last_modify_on: 'December 10, 1815',
-          email: 'leonardo@tmnt.com',
-        },
-        {
-          name: 'Rafael Tartaruga Ninja',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-          phone: '+1 (212) 846-2543',
-          linkedin: 'www.linkedin.com/rafael',
-          Applied_On: 'December 10, 1815',
-          Stage: 'Applied',
-          last_modify_on: 'December 10, 1815',
-          email: 'rafael@tmnt.com',
-        },
-        {
-          name: 'Donatello Tartaruga Ninja',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-          phone: '+1 (212) 846-2543',
-          linkedin: 'www.linkedin.com/donatello',
-          Applied_On: 'December 10, 1815',
-          Stage: 'Applied',
-          last_modify_on: 'December 10, 1815',
-          email: 'donatello@tmnt.com',
-        },
-        {
-          name: 'Senhor Splinter Rato',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-          phone: '+1 (212) 846-2543',
-          linkedin: 'www.linkedin.com/splinter',
-          Applied_On: 'December 10, 1815',
-          Stage: 'Applied',
-          last_modify_on: 'December 10, 1815',
-          email: 'splinter@tmnt.com',
-        },
       ],
       selected_candidate: {
       },
@@ -230,6 +180,7 @@ export default {
       sortDirection: 'asc',
       filter: null,
       filterOn: [],
+      archive_cadidatevar: 'Archived',
     };
   },
   computed: {
@@ -245,32 +196,33 @@ export default {
       this.selected_candidate = candidate;
     },
     move_candidate() {
-      const url = `http://192.168.0.37:7011/api/v1/candidates/${this.selected_candidate.id}`;
+      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
       axios
         .patch(url, { Stage: this.selected_hiring_stages })
         .then((response) => {
-          if (response.data.stats === 'sucess') {
+          if (response.data.status === 'success') {
             this.get_candidates(this.selected_tab);
           }
         });
-      this.selected_candidate.Stage = this.selected_hiring_stages;
       this.selected_hiring_stages = '';
     },
-    archive_cadidate(candidate, index) {
+    archive_cadidate(candidate) {
       this.select_candidate(candidate);
-      this.selected_candidate.Stage = 'Archived';
-      this.candidates.splice(index, 1);
+      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
+      axios
+        .patch(url, { Stage: this.archive_cadidatevar })
+        .then((response) => {
+          if (response.data.status === 'success') {
+            this.get_candidates(this.selected_tab);
+          }
+        });
     },
     onFiltered() {
 
     },
     get_candidates(Stage) {
       this.selected_tab = Stage;
-      let newStage = Stage;
-      if (Stage === undefined) {
-        newStage = 'Applied';
-      }
-      const url = `http://192.168.0.37:7011/api/v1/candidates?Stage=${newStage}`;
+      const url = `http://localhost:7011/api/v1/candidates?Stage=${Stage}`;
       axios
         .get(url)
         .then((response) => {
@@ -279,14 +231,14 @@ export default {
     },
     get_hiring_stages() {
       axios
-        .get('http://192.168.0.37:7011/api/v1/hiring_stages')
+        .get('http://localhost:7011/api/v1/hiring_stages')
         .then((response) => {
           this.hiring_stages = response.data.hiring_stages;
         });
     },
   },
   created() {
-    this.get_candidates();
+    this.get_candidates('Applied');
     this.get_hiring_stages();
   },
 };
