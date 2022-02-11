@@ -55,8 +55,12 @@
         </b-container>
       </template>
       <p class="my-4"><b>Office:</b> {{job_posting.office}}</p>
+      <p class="my-4"><b>Hiring Type:</b> {{job_posting.hiring_type}}</p>
       <p class="my-4"><b>Status:</b> {{job_posting.status}}</p>
       <p class="my-4"><b>Description:</b> {{job_posting.description}}</p>
+      <p class="my-4"><b>Salary Range:</b>
+       From ${{job_posting.salary_min}} to ${{job_posting.salary_max}}</p>
+       <p class="my-4"><b>Benefits:</b> {{job_posting.benefits}}</p>
     </b-modal>
     <b-modal id="modal-candidate-detail" hide-footer>
       <template v-slot:modal-header>
@@ -168,6 +172,8 @@ export default {
         salary_max: 5000,
         office: 'Office 1',
         status: 'Published',
+        hiring_type: 'Full time job',
+        benefits: 'Health Insurance, PTO and Remote Work',
       },
       selected_hiring_stages: '',
       selected_tab: '',
