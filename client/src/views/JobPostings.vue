@@ -69,6 +69,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -91,38 +93,6 @@ export default {
           email: 'Michelangelo@tmtn.com',
           address: 'Boeiro de Rua, 1, New York, NY, USA',
         },
-        {
-          name: 'Leonardo',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Leonardo@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Donatello',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Donatello@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Rafael',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Rafael@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
-        {
-          name: 'Splinter',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Splinter@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
-        },
       ],
       selected_candidate: {
       },
@@ -142,6 +112,20 @@ export default {
       this.selected_candidate.stage = 'Archived';
       this.candidates.splice(index, 1);
     },
+  },
+  created() {
+    axios
+      .get('http://192.168.1.21:7011/api/v1/hiring_stages')
+      .then((response) => {
+        console.log(response);
+        this.hiring_stages = response.data.hiring_stages;
+      });
+    axios
+      .get('http://192.168.1.21:7011/api/v1/candidates')
+      .then((response) => {
+        console.log(response);
+        this.candidates = response.data.candidates;
+      });
   },
 };
 </script>
