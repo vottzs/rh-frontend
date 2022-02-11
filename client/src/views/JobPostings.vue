@@ -81,7 +81,10 @@
         </b-container>
       </template>
       <p class="my-4"><b>Address:</b> {{selected_candidate.address}}</p>
+      <p class="my-4"><b>Phone:</b> {{selected_candidate.phone}}</p>
       <p class="my-4"><b>Email:</b> {{selected_candidate.email}}</p>
+      <p class="my-4"><b>LinkedIn:</b> {{selected_candidate.linkedin}}</p>
+      <p class="my-4"><b>Applied to:</b> {{job_posting.title}}</p>
     </b-modal>
     <b-modal id="modal-move-candidate" :title="selected_candidate.name" ok-title=Move
     @ok="move_candidate">
