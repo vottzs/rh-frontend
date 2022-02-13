@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import StaticJobPostings from '../views/StaticJobPostings.vue';
 import JobPostings from '../views/JobPostings.vue';
+import Offices from '../views/Offices.vue';
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,11 @@ const routes = [
     path: '/job_postings',
     name: 'Job Postings',
     component: JobPostings,
+  },
+  {
+    path: '/offices',
+    name: 'Offices',
+    component: Offices,
   },
 ];
 
