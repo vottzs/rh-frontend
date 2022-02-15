@@ -98,6 +98,7 @@ export default {
       selected_candidate: {
       },
       selected_hiring_stage: '',
+      selected_tab: '',
     };
   },
   methods: {
@@ -105,6 +106,14 @@ export default {
       this.selected_candidate = candidate;
     },
     move_candidate() {
+      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
+      axios
+        .patch(url, { stage: this.selected_hiring_stage })
+        .then((response) => {
+          if (response.data.status === 'success') {
+            this.get_candidates(this.selected_tab);
+          }
+        });
       this.selected_candidate.stage = this.selected_hiring_stage;
       this.selected_hiring_stage = '';
     },
@@ -114,6 +123,7 @@ export default {
       this.candidates.splice(index, 1);
     },
     get_candidates(stage) {
+      this.selected_tab = stage;
       let newStage = stage;
       if (stage === undefined) {
         newStage = 'Applied';
