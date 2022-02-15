@@ -1,66 +1,21 @@
 <template>
   <div>
-    <b-row>
-      <b-col lg="5" class="my-1">
-        <b-form-group
-          label="Filter"
-          label-for="filter-input"
-          label-cols-sm="3"
-          label-align-sm="right"
-          label-size="sm"
-          class="mb-0"
-        >
-          <b-input-group size="sm">
-            <b-form-input
-              id="filter-input"
-              v-model="filter"
-              type="search"
-              placeholder="Type to Search"
-            ></b-form-input>
-
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
-      </b-col>
-    </b-row>
-
     <b-container fluid>
-      <b-row class="text-center">
-        <b-col md="3" class="py-3" align='left'>
-          <h4>{{job_posting.title}}</h4>
-        </b-col>
-        <b-col md="1" class="py-3">
-          <b-button v-b-modal.modal-job-posting-detail>Details</b-button>
+      <b-row class="text-left">
+        <b-col md="8" class="py-3" align=left>
+          <b-button v-b-modal.modal-create-new-office>CREATE NEW OFFICE</b-button>
         </b-col>
       </b-row>
     </b-container>
-    <b-modal id="modal-job-posting-detail" hide-footer>
-      <template v-slot:modal-header>
-        <b-container fluid>
-          <b-row class="text-center">
-            <b-col md="9" class="py-3" align='left'>
-              <h4 class="modal-title">
-                <b>{{job_posting.title}}</b>
-              </h4>
-            </b-col>
-            <b-col md="1" class="py-3" align='right'>
-              <b-button variant="light border-dark" class="btn btn-primary action_btn float-right"
-              v-on:click="closeModal" align="right">
-                Edit
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-container>
-      </template>
-      <p class="my-4"><b>Office:</b> {{job_posting.office}}</p>
-      <p class="my-4"><b>Hiring Type:</b> {{job_posting.hiring_type}}</p>
-      <p class="my-4"><b>Status:</b> {{job_posting.status}}</p>
-      <p class="my-4"><b>Description:</b> {{job_posting.description}}</p>
-      <p class="my-4"><b>Salary Range:</b>
-       From ${{job_posting.salary_min}} to ${{job_posting.salary_max}}</p>
-       <p class="my-4"><b>Benefits:</b> {{job_posting.benefits}}</p>
+    <b-modal id="modal-create-new-office" :title="selected_candidate.name" ok-title=Create
+    @ok="move_candidate">
+      <p class="my-4"><b>Tittle:</b> <b-form-input v-model="text"
+      placeholder="Enter office tittle"></b-form-input></p>
+      <p class="my-4">
+        <b>Address:</b>
+        <b-form-input v-model="text" placeholder="Enter office address">
+      </b-form-input>
+      </p>
     </b-modal>
     <b-modal id="modal-candidate-detail" hide-footer>
       <template v-slot:modal-header>
@@ -97,36 +52,16 @@
       </p>
     </b-modal>
     <b-card no-body>
-      <b-tabs card>
-        <!-- Render Tabs, supply a unique `key` to each tab -->
-        <b-tab v-for="Stage in hiring_stages" :key="'dyn-tab-' + Stage" :title="Stage"
-        v-on:click="get_candidates(Stage)">
-          <b-table :items="candidates" :fields="fields" striped responsive="sm"
-            :filter="filter"
-            :filter-included-fields="filterOn"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-            :sort-direction="sortDirection"
-            stacked="md"
-            show-empty
-            small
-            @filtered="onFiltered">
-            <template #cell(Actions)="row">
-              <b-button size="sm" class="mr-2" @click="archive_cadidate(row.item)">
-                Archive
+          <b-table :items="candidates" :fields="fields" striped responsive="sm">
+            <template #cell(Actions)>
+              <b-button size="sm" class="mr-2">
+                Delete
               </b-button>&nbsp;
-              <b-button size="sm" class="mr-2"
-              v-b-modal.modal-move-candidate @click="select_candidate(row.item)">
-                Move
-              </b-button>&nbsp;
-              <b-button size="sm" class="mr-2"
-              v-b-modal.modal-candidate-detail @click="select_candidate(row.item)">
-                Details
+              <b-button size="sm" class="mr-2">
+                Edit
               </b-button>
             </template>
           </b-table>
-        </b-tab>
-      </b-tabs>
     </b-card>
   </div>
 </template>
@@ -140,32 +75,27 @@ export default {
       hiring_stages: ['Applied', 'Resume Analysis', 'Contacted'],
       fields: [
         {
-          key: 'name',
-          label: 'name',
+          key: 'tittle',
+          label: 'Tittle',
           sortable: true,
           sortDirection: 'desc',
         },
         {
-          key: 'Applied_On',
-          label: 'Applied On',
-          sortable: true,
+          key: 'address',
+          label: 'Address',
+          sortable: false,
           class: 'text-center',
         },
         {
-          key: 'Stage',
-          label: 'Stage',
-          sortable: true,
-          class: 'text-center',
-        },
-        {
-          key: 'last_modify_on',
-          label: 'Last Modify On',
-          sortable: true,
+          key: 'creation_time',
+          label: 'Creation Time',
+          sortable: false,
           class: 'text-center',
         },
         {
           key: 'Actions',
           label: 'Actions',
+          sortable: false,
         },
       ],
       job_posting: {
@@ -181,6 +111,21 @@ export default {
       selected_hiring_stages: '',
       selected_tab: '',
       candidates: [
+        {
+          tittle: 'Headquarter',
+          address: '1515 Broadway New York, New York 10036 ',
+          phone: '+1 (201) 766-7329',
+        },
+        {
+          tittle: 'Office 1',
+          address: '1515 Broadway New York, New York 10038',
+          phone: '+1 (212) 846-6006',
+        },
+        {
+          tittle: 'Office 2',
+          address: '17 - 29 Hawley Crescent, Camden, London NW1 8TT',
+          phone: '+1 (212) 846-6007',
+        },
       ],
       selected_candidate: {
       },
