@@ -46,7 +46,8 @@
     <b-card no-body>
       <b-tabs card>
         <!-- Render Tabs, supply a unique `key` to each tab -->
-        <b-tab v-for="stage in hiring_stages" :key="'dyn-tab-' + stage" :title="stage">
+        <b-tab v-for="stage in hiring_stages" :key="'dyn-tab-' + stage" :title="stage"
+        v-on:click="get_candidates(stage)">
           <b-table :items="candidates" :fields="fields" striped responsive="sm">
             <template #cell(actions)="row">
               <b-button size="sm" class="mr-2" @click="archive_candidate(row.item, row.index)">
@@ -112,20 +113,31 @@ export default {
       this.selected_candidate.stage = 'Archived';
       this.candidates.splice(index, 1);
     },
+    get_candidates(stage) {
+      let newStage = stage;
+      if (stage === undefined) {
+        newStage = 'Applied';
+      }
+      const url = `http://192.168.1.21:7011/api/v1/candidates?stage=${newStage}`;
+      axios
+        .get(url)
+        .then((response) => {
+          console.log(response);
+          this.candidates = response.data.candidates;
+        });
+    },
+    get_hiring_stages() {
+      axios
+        .get('http://192.168.1.21:7011/api/v1/hiring_stages')
+        .then((response) => {
+          console.log(response);
+          this.hiring_stages = response.data.hiring_stages;
+        });
+    },
   },
   created() {
-    axios
-      .get('http://192.168.1.21:7011/api/v1/hiring_stages')
-      .then((response) => {
-        console.log(response);
-        this.hiring_stages = response.data.hiring_stages;
-      });
-    axios
-      .get('http://192.168.1.21:7011/api/v1/candidates')
-      .then((response) => {
-        console.log(response);
-        this.candidates = response.data.candidates;
-      });
+    this.get_candidates();
+    this.get_hiring_stages();
   },
 };
 </script>
