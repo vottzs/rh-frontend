@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import StaticJobPostings from '../views/StaticJobPostings.vue';
 import JobPostings from '../views/JobPostings.vue';
 import Offices from '../views/Offices.vue';
+import Benefits from '../views/Benefits.vue';
 
 Vue.use(VueRouter);
 
@@ -35,6 +36,11 @@ const routes = [
     path: '/offices',
     name: 'Offices',
     component: Offices,
+  },
+  {
+    path: '/benefits',
+    name: 'Benefits',
+    component: Benefits,
   },
 ];
 
