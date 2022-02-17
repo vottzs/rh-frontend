@@ -8,51 +8,17 @@
       </b-row>
     </b-container>
     <b-modal id="modal-create-new-office" :title="selected_candidate.name" ok-title=Create
-    @ok="move_candidate">
-      <p class="my-4"><b>Tittle:</b> <b-form-input v-model="text"
+    @ok="new_office()">
+      <p class="my-4"><b>Tittle:</b> <b-form-input v-model="new_office_var.tittle"
       placeholder="Enter office tittle"></b-form-input></p>
       <p class="my-4">
         <b>Address:</b>
-        <b-form-input v-model="text" placeholder="Enter office address">
+        <b-form-input v-model="new_office_var.address" placeholder="Enter office address">
       </b-form-input>
       </p>
     </b-modal>
-    <b-modal id="modal-candidate-detail" hide-footer>
-      <template v-slot:modal-header>
-        <b-container fluid>
-          <b-row class="text-center">
-            <b-col md="10" class="py-3" align='left'>
-              <h4 class="modal-title">
-                <b>{{selected_candidate.name}}</b>
-              </h4>
-            </b-col>
-            <b-col md="2" class="py-3" align='right'>
-              <b-button variant="light border-dark" class="btn btn-primary action_btn float-right"
-              v-on:click="closeModal" align="right">
-                Edit
-              </b-button>
-            </b-col>
-          </b-row>
-        </b-container>
-      </template>
-      <p class="my-4"><b>Address:</b> {{selected_candidate.address}}</p>
-      <p class="my-4"><b>Phone:</b> {{selected_candidate.phone}}</p>
-      <p class="my-4"><b>Email:</b> {{selected_candidate.email}}</p>
-      <p class="my-4"><b>LinkedIn:</b> {{selected_candidate.linkedin}}</p>
-      <p class="my-4"><b>Applied to:</b> {{job_posting.title}}</p>
-    </b-modal>
-    <b-modal id="modal-move-candidate" :title="selected_candidate.name" ok-title=Move
-    @ok="move_candidate">
-      <p class="my-4"><b>Current Stage:</b> {{selected_candidate.Stage}}</p>
-      <p class="my-4">
-        <b>Move to:</b>
-        <b-form-select v-model="selected_hiring_stages" :options="hiring_stages"
-        class="form-select">
-        </b-form-select>
-      </p>
-    </b-modal>
     <b-card no-body>
-          <b-table :items="candidates" :fields="fields" striped responsive="sm">
+          <b-table :items="offices" :fields="fields" striped responsive="sm">
             <template #cell(Actions)>
               <b-button size="sm" class="mr-2">
                 Delete
@@ -72,6 +38,10 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      new_office_var: {
+        tittle: '',
+        address: '',
+      },
       hiring_stages: ['Applied', 'Resume Analysis', 'Contacted'],
       fields: [
         {
@@ -110,22 +80,7 @@ export default {
       },
       selected_hiring_stages: '',
       selected_tab: '',
-      candidates: [
-        {
-          tittle: 'Headquarter',
-          address: '1515 Broadway New York, New York 10036 ',
-          phone: '+1 (201) 766-7329',
-        },
-        {
-          tittle: 'Office 1',
-          address: '1515 Broadway New York, New York 10038',
-          phone: '+1 (212) 846-6006',
-        },
-        {
-          tittle: 'Office 2',
-          address: '17 - 29 Hawley Crescent, Camden, London NW1 8TT',
-          phone: '+1 (212) 846-6007',
-        },
+      offices: [
       ],
       selected_candidate: {
       },
@@ -149,51 +104,32 @@ export default {
     select_candidate(candidate) {
       this.selected_candidate = candidate;
     },
-    move_candidate() {
-      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
+    new_office() {
+      const url = 'http://localhost:7011/api/v1/offices';
       axios
-        .patch(url, { Stage: this.selected_hiring_stages })
+        .patch(url, this.new_office_var)
         .then((response) => {
           if (response.data.status === 'success') {
-            this.get_candidates(this.selected_tab);
+            this.get_offices();
           }
         });
-      this.selected_hiring_stages = '';
-    },
-    archive_cadidate(candidate) {
-      this.select_candidate(candidate);
-      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
-      axios
-        .patch(url, { Stage: this.archive_cadidatevar })
-        .then((response) => {
-          if (response.data.status === 'success') {
-            this.get_candidates(this.selected_tab);
-          }
-        });
+      this.new_office_var.address = '';
+      this.new_office_var.tittle = '';
     },
     onFiltered() {
 
     },
-    get_candidates(Stage) {
-      this.selected_tab = Stage;
-      const url = `http://localhost:7011/api/v1/candidates?Stage=${Stage}`;
+    get_offices() {
+      const url = 'http://localhost:7011/api/v1/offices';
       axios
         .get(url)
         .then((response) => {
-          this.candidates = response.data.candidates;
-        });
-    },
-    get_hiring_stages() {
-      axios
-        .get('http://localhost:7011/api/v1/hiring_stages')
-        .then((response) => {
-          this.hiring_stages = response.data.hiring_stages;
+          this.offices = response.data.offices;
         });
     },
   },
   created() {
-    this.get_candidates('Applied');
-    this.get_hiring_stages();
+    this.get_offices();
   },
 };
 </script>
