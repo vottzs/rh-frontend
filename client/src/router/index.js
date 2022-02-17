@@ -5,6 +5,7 @@ import StaticJobPostings from '../views/StaticJobPostings.vue';
 import JobPostings from '../views/JobPostings.vue';
 import Offices from '../views/Offices.vue';
 import Benefits from '../views/Benefits.vue';
+import HiringTypes from '../views/HiringTypes.vue';
 
 Vue.use(VueRouter);
 
@@ -41,6 +42,11 @@ const routes = [
     path: '/benefits',
     name: 'Benefits',
     component: Benefits,
+  },
+  {
+    path: '/hiring_types',
+    name: 'Hiring Types',
+    component: HiringTypes,
   },
 ];
 
