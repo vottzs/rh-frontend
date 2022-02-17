@@ -3,19 +3,14 @@
     <b-container fluid>
       <b-row class="text-left">
         <b-col md="8" class="py-3" align=left>
-          <b-button v-b-modal.modal-create-new-office>CREATE NEW OFFICE</b-button>
+          <b-button v-b-modal.modal-create-new-office>CREATE NEW BENEFIT</b-button>
         </b-col>
       </b-row>
     </b-container>
     <b-modal id="modal-create-new-office" :title="selected_candidate.name" ok-title=Create
     @ok="new_office()">
-      <p class="my-4"><b>Tittle:</b> <b-form-input v-model="new_office_var.tittle"
-      placeholder="Enter office tittle"></b-form-input></p>
-      <p class="my-4">
-        <b>Address:</b>
-        <b-form-input v-model="new_office_var.address" placeholder="Enter office address">
-      </b-form-input>
-      </p>
+      <p class="my-4"><b>Name:</b> <b-form-input v-model="new_office_var.name"
+      placeholder="Enter benefit tittle"></b-form-input></p>
     </b-modal>
     <b-card no-body>
           <b-table :items="offices" :fields="fields" striped responsive="sm">
@@ -42,23 +37,20 @@ export default {
         tittle: '',
         address: '',
       },
+      new_benefit_var: {
+        name: '',
+      },
       hiring_stages: ['Applied', 'Resume Analysis', 'Contacted'],
       fields: [
         {
-          key: 'tittle',
-          label: 'Tittle',
+          key: 'name',
+          label: 'Name',
           sortable: true,
           sortDirection: 'desc',
         },
         {
-          key: 'address',
-          label: 'Address',
-          sortable: false,
-          class: 'text-center',
-        },
-        {
-          key: 'creation_date',
-          label: 'Creation Date',
+          key: '_id',
+          label: 'Creation Time',
           sortable: false,
           class: 'text-center',
         },
@@ -80,7 +72,7 @@ export default {
       },
       selected_hiring_stages: '',
       selected_tab: '',
-      offices: [
+      benefits: [
       ],
       selected_candidate: {
       },
@@ -104,10 +96,10 @@ export default {
     select_candidate(candidate) {
       this.selected_candidate = candidate;
     },
-    new_office() {
-      const url = 'http://localhost:7011/api/v1/offices';
+    new_benefit() {
+      const url = 'http://localhost:7011/api/v1/benefit';
       axios
-        .patch(url, this.new_office_var)
+        .patch(url, this.new_benefit)
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_offices();
@@ -119,12 +111,12 @@ export default {
     onFiltered() {
 
     },
-    get_offices() {
-      const url = 'http://localhost:7011/api/v1/offices';
+    get_benefits() {
+      const url = 'http://localhost:7011/api/v1/benefits';
       axios
         .get(url)
         .then((response) => {
-          this.offices = response.data.offices;
+          this.benefits = response.data.benefits;
         });
     },
   },
