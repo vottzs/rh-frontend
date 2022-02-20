@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h4>{{job_posting.title}}</h4>
-    <b-button v-b-modal.modal-job-posting-detail>Details</b-button>
+    <div>
+      <h4 id="h4title">{{job_posting.title}}</h4>
+      <b-button id="botaoleft" v-b-modal.modal-job-posting-detail>Details</b-button>
+    </div>
     <b-modal id="modal-job-posting-detail" hide-footer>
       <template v-slot:modal-header>
         <h4 class="modal-title">
@@ -17,6 +19,11 @@
       <p class="my-4"><b>Office:</b> {{job_posting.office}}</p>
       <p class="my-4"><b>Status:</b> {{job_posting.status}}</p>
       <p class="my-4"><b>Description:</b> {{job_posting.description}}</p>
+      <p class="my-4"><b>Salary Range:</b>
+        ${{job_posting.salary_min}} to ${{job_posting.salary_max}}
+      </p>
+      <p class="my-4"><b>Benefits:</b> {{job_posting.benefits}}</p>
+      <p class="my-4"><b>Hiring Type:</b> {{job_posting.hiringtype}}</p>
     </b-modal>
     <b-modal id="modal-candidate-detail" hide-footer>
       <template v-slot:modal-header>
@@ -43,7 +50,7 @@
         </b-form-select>
       </p>
     </b-modal>
-    <b-card no-body>
+    <b-card id="nobody" no-body>
       <b-tabs card>
         <!-- Render Tabs, supply a unique `key` to each tab -->
         <b-tab
@@ -85,6 +92,9 @@ export default {
         salary_max: 5000,
         office: 'Headquarters',
         status: 'Published',
+        benefits: 'clt',
+        hiringtype: 'Contract',
+
       },
       candidates: [
       ],
@@ -137,3 +147,16 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+#h4title{
+  float: left;
+  margin: 8px;
+}
+#botaoleft{
+  float: left;
+}
+#nobody{
+  clear: both;
+}
+</style>
