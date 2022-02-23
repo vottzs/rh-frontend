@@ -88,7 +88,7 @@
     </b-modal>
     <b-modal id="modal-move-candidate" :title="selected_candidate.name" ok-title=Move
     @ok="move_candidate">
-      <p class="my-4"><b>Current Stage:</b> {{selected_candidate.Stage}}</p>
+      <p class="my-4"><b>Current Stage:</b> {{selected_candidate.stage}}</p>
       <p class="my-4">
         <b>Move to:</b>
         <b-form-select v-model="selected_hiring_stages" :options="hiring_stages"
@@ -99,8 +99,8 @@
     <b-card no-body>
       <b-tabs card>
         <!-- Render Tabs, supply a unique `key` to each tab -->
-        <b-tab v-for="Stage in hiring_stages" :key="'dyn-tab-' + Stage" :title="Stage"
-        v-on:click="get_candidates(Stage)">
+        <b-tab v-for="stage in hiring_stages" :key="'dyn-tab-' + stage" :title="stage"
+        v-on:click="get_candidates(stage)">
           <b-table :items="candidates" :fields="fields" striped responsive="sm"
             :filter="filter"
             :filter-included-fields="filterOn"
@@ -141,24 +141,24 @@ export default {
       fields: [
         {
           key: 'name',
-          label: 'name',
+          label: 'Name',
           sortable: true,
           sortDirection: 'desc',
         },
         {
-          key: 'Applied_On',
+          key: 'applied_on',
           label: 'Applied On',
           sortable: true,
           class: 'text-center',
         },
         {
-          key: 'Stage',
+          key: 'stage',
           label: 'Stage',
           sortable: true,
           class: 'text-center',
         },
         {
-          key: 'last_modify_on',
+          key: 'last_modified_on',
           label: 'Last Modify On',
           sortable: true,
           class: 'text-center',
@@ -207,7 +207,7 @@ export default {
     move_candidate() {
       const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
       axios
-        .patch(url, { Stage: this.selected_hiring_stages })
+        .patch(url, { stage: this.selected_hiring_stages })
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_candidates(this.selected_tab);
@@ -219,7 +219,7 @@ export default {
       this.select_candidate(candidate);
       const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
       axios
-        .patch(url, { Stage: this.archive_cadidatevar })
+        .patch(url, { stage: this.archive_cadidatevar })
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_candidates(this.selected_tab);
@@ -229,9 +229,9 @@ export default {
     onFiltered() {
 
     },
-    get_candidates(Stage) {
-      this.selected_tab = Stage;
-      const url = `http://localhost:7011/api/v1/candidates?Stage=${Stage}`;
+    get_candidates(stage) {
+      this.selected_tab = stage;
+      const url = `http://localhost:7011/api/v1/candidates?stage=${stage}`;
       axios
         .get(url)
         .then((response) => {
