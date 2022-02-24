@@ -4,7 +4,8 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
       <router-link to="/static_job_postings">Static Job Postings</router-link> |
-      <router-link to="/job_postings">Job Postings</router-link> |
+      <router-link to="/all_job_postings">Job Postings</router-link> |
+      <router-link to="/job_postings">Job Posting</router-link> |
       <router-link to="/offices">Offices</router-link> |
       <router-link to="/benefits">Benefits</router-link> |
       <router-link to="/hiring_types">Hiring Types</router-link>
