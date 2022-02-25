@@ -82,6 +82,9 @@
         show-empty
         small
         @filtered="onFiltered">
+        <template #cell(tittle)="row">
+        <b-link href="https://www.google.com/">{{row.item.tittle}}</b-link>
+        </template>
       </b-table>
   </div>
 </template>
@@ -186,6 +189,7 @@ export default {
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_job_postings();
+            alert('AAAA');
           }
         });
       this.new_job_posting_var.tittle = '';
