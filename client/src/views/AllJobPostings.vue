@@ -83,7 +83,7 @@
         small
         @filtered="onFiltered">
         <template #cell(tittle)="row">
-        <b-link href="https://www.google.com/">{{row.item.tittle}}</b-link>
+        <b-link href="http://localhost:8080/job_postings" @click="active_job_posting(row.item)">{{row.item.tittle}}</b-link>
         </template>
       </b-table>
   </div>
@@ -103,6 +103,7 @@ export default {
         benefits: '',
         salary_max: '',
         salary_min: '',
+        stage: '',
       },
       fields: [
         {
@@ -148,29 +149,19 @@ export default {
           class: 'text-center',
         },
       ],
-      job_posting: {
-        title: 'Quality Assurance',
-        description: 'A quality assurance specialist ensures that the final product observes the company\'s quality standards. In general, these detail-oriented professionals are responsible for the development and implementation of inspection activities, the detection and resolution of problems, and the delivery of satisfactory outcomes.',
-        salary_min: 1000,
-        salary_max: 5000,
-        office: 'Office 1',
-        status: 'Published',
-        hiring_type: 'Full time job',
-        benefits: 'Health Insurance, PTO and Remote Work',
-      },
       selected_hiring_stages: '',
       selected_tab: '',
       job_postings: [
       ],
       candidates: [],
-      selected_candidate: {
+      selected_job_posting: {
       },
       sortBy: '',
       sortDesc: false,
       sortDirection: 'asc',
       filter: null,
       filterOn: [],
-      archive_cadidatevar: 'Archived',
+      activate_jobpostingvar: 'active',
     };
   },
   computed: {
@@ -182,6 +173,15 @@ export default {
     },
   },
   methods: {
+    select_job_posting(jobPosting) {
+      this.selected_job_posting = jobPosting;
+    },
+    active_job_posting(jobPosting) {
+      this.select_job_posting(jobPosting);
+      const url = `http://localhost:7011/api/v1/job_postings/${this.selected_job_posting.tittle}`;
+      axios
+        .patch(url, { stage: this.activate_jobpostingvar });
+    },
     new_job_posting() {
       const url = 'http://localhost:7011/api/v1/job_postings';
       axios
@@ -189,7 +189,6 @@ export default {
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_job_postings();
-            alert('AAAA');
           }
         });
       this.new_job_posting_var.tittle = '';
