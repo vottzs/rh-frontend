@@ -190,6 +190,7 @@ export default {
       filter: null,
       filterOn: [],
       archive_cadidatevar: 'Archived',
+      activate_jobpostingvar: 'active',
     };
   },
   computed: {
@@ -245,10 +246,20 @@ export default {
           this.hiring_stages = response.data.hiring_stages;
         });
     },
+    get_job_postings(stage) {
+      this.activate_jobpostingvar = stage;
+      const url = `http://localhost:7011/api/v1/job_postings/import/${stage}`;
+      axios
+        .get(url)
+        .then((response) => {
+          this.job_posting = response.data.job_posting;
+        });
+    },
   },
   created() {
     this.get_candidates('Applied');
     this.get_hiring_stages();
+    this.get_job_postings('active');
   },
 };
 </script>
