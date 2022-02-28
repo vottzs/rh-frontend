@@ -29,7 +29,7 @@
     <b-container fluid>
       <b-row class="text-center">
         <b-col md="3" class="py-3" align='left'>
-          <h4>{{job_posting.title}}</h4>
+          <h4>{{job_posting.tittle}}</h4>
         </b-col>
         <b-col md="1" class="py-3">
           <b-button v-b-modal.modal-job-posting-detail>Details</b-button>
@@ -42,7 +42,7 @@
           <b-row class="text-center">
             <b-col md="9" class="py-3" align='left'>
               <h4 class="modal-title">
-                <b>{{job_posting.title}}</b>
+                <b>{{job_posting.tittle}}</b>
               </h4>
             </b-col>
             <b-col md="1" class="py-3" align='right'>
@@ -169,7 +169,7 @@ export default {
         },
       ],
       job_posting: {
-        title: 'Quality Assurance',
+        tittle: 'Quality Assurance',
         description: 'A quality assurance specialist ensures that the final product observes the company\'s quality standards. In general, these detail-oriented professionals are responsible for the development and implementation of inspection activities, the detection and resolution of problems, and the delivery of satisfactory outcomes.',
         salary_min: 1000,
         salary_max: 5000,

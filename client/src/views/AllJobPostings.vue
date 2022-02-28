@@ -103,7 +103,7 @@ export default {
         benefits: '',
         salary_max: '',
         salary_min: '',
-        stage: '',
+        stage: 'inactive',
       },
       fields: [
         {
@@ -149,11 +149,8 @@ export default {
           class: 'text-center',
         },
       ],
-      selected_hiring_stages: '',
-      selected_tab: '',
       job_postings: [
       ],
-      candidates: [],
       selected_job_posting: {
       },
       sortBy: '',
@@ -162,6 +159,7 @@ export default {
       filter: null,
       filterOn: [],
       activate_jobpostingvar: 'active',
+      deactivate_jobpostingvar: 'inactive',
     };
   },
   computed: {
@@ -181,6 +179,13 @@ export default {
       const url = `http://localhost:7011/api/v1/job_postings/${this.selected_job_posting.tittle}`;
       axios
         .patch(url, { stage: this.activate_jobpostingvar });
+      alert('Você está sendo redirecionado');
+    },
+    reset_job_posting_stage(stage) {
+      this.activate_jobpostingvar = stage;
+      const url = `http://localhost:7011/api/v1/job_postings?stage=${stage}`;
+      axios
+        .post(url, { stage: this.activate_jobpostingvar });
     },
     new_job_posting() {
       const url = 'http://localhost:7011/api/v1/job_postings';
@@ -199,46 +204,8 @@ export default {
       this.new_job_posting_var.salary_max = '';
       this.new_job_posting_var.salary_min = '';
     },
-    move_candidate() {
-      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
-      axios
-        .patch(url, { stage: this.selected_hiring_stages })
-        .then((response) => {
-          if (response.data.status === 'success') {
-            this.get_candidates(this.selected_tab);
-          }
-        });
-      this.selected_hiring_stages = '';
-    },
-    archive_cadidate(candidate) {
-      this.select_candidate(candidate);
-      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
-      axios
-        .patch(url, { stage: this.archive_cadidatevar })
-        .then((response) => {
-          if (response.data.status === 'success') {
-            this.get_candidates(this.selected_tab);
-          }
-        });
-    },
     onFiltered() {
 
-    },
-    get_candidates(stage) {
-      this.selected_tab = stage;
-      const url = `http://localhost:7011/api/v1/candidates?stage=${stage}`;
-      axios
-        .get(url)
-        .then((response) => {
-          this.candidates = response.data.candidates;
-        });
-    },
-    get_hiring_stages() {
-      axios
-        .get('http://localhost:7011/api/v1/hiring_stages')
-        .then((response) => {
-          this.hiring_stages = response.data.hiring_stages;
-        });
     },
     get_job_postings() {
       const url = 'http://localhost:7011/api/v1/job_postings';
@@ -251,6 +218,7 @@ export default {
   },
   created() {
     this.get_job_postings();
+    this.reset_job_posting_stage('active');
   },
 };
 </script>
