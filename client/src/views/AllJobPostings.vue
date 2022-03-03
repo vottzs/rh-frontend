@@ -35,8 +35,8 @@
     </b-container>
     <b-modal id="modal-create-new-job-posting" :title="'Create new job posting'" ok-title="Create"
     @ok="new_job_posting()">
-      <p class="my-4"><b>Tittle:</b> <b-form-input v-model="new_job_posting_var.tittle"
-      placeholder="Enter job posting tittle"></b-form-input></p>
+      <p class="my-4"><b>Title:</b> <b-form-input v-model="new_job_posting_var.title"
+      placeholder="Enter job posting title"></b-form-input></p>
       <p class="my-4">
         <b>Description:</b>
         <b-form-textarea
@@ -82,8 +82,8 @@
         show-empty
         small
         @filtered="onFiltered">
-        <template #cell(tittle)="row">
-        <b-link href="http://localhost:8080/job_postings" @click="active_job_posting(row.item)">{{row.item.tittle}}</b-link>
+        <template #cell(title)="row">
+        <b-link href="http://localhost:8080/job_postings" @click="active_job_posting(row.item)">{{row.item.title}}</b-link>
         </template>
       </b-table>
   </div>
@@ -96,7 +96,7 @@ export default {
   data() {
     return {
       new_job_posting_var: {
-        tittle: '',
+        title: '',
         description: '',
         office: '',
         hiring_type: '',
@@ -107,8 +107,8 @@ export default {
       },
       fields: [
         {
-          key: 'tittle',
-          label: 'Tittle',
+          key: 'title',
+          label: 'Title',
           sortable: true,
           sortDirection: 'desc',
         },
@@ -176,7 +176,7 @@ export default {
     },
     active_job_posting(jobPosting) {
       this.select_job_posting(jobPosting);
-      const url = `http://localhost:7011/api/v1/job_postings/${this.selected_job_posting.tittle}`;
+      const url = `http://localhost:7011/api/v1/job_postings/${this.selected_job_posting.title}`;
       axios
         .patch(url, { stage: this.activate_jobpostingvar });
       alert('Você está sendo redirecionado');
@@ -196,7 +196,7 @@ export default {
             this.get_job_postings();
           }
         });
-      this.new_job_posting_var.tittle = '';
+      this.new_job_posting_var.title = '';
       this.new_job_posting_var.description = '';
       this.new_job_posting_var.office = '';
       this.new_job_posting_var.hiring_type = '';
