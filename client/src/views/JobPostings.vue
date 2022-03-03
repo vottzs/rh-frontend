@@ -87,12 +87,6 @@ export default {
       },
       candidates: [
         {
-          name: 'Michelangelo',
-          applied_on: 'December 10, 1815',
-          stage: 'Resume Analysis',
-          last_modified_on: 'December 10, 1815',
-          email: 'Michelangelo@tmtn.com',
-          address: 'Boeiro de Rua, 1, New York, NY, USA',
         },
       ],
       selected_candidate: {
@@ -118,7 +112,7 @@ export default {
       this.selected_hiring_stage = '';
     },
     archive_candidate(candidate) {
-      this.select_candidate(candidate);
+      this.selected_candidate = candidate;
       this.selected_candidate.stage = 'Archived';
       const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
       axios
@@ -138,7 +132,7 @@ export default {
       if (stage === undefined) {
         newStage = 'Applied';
       }
-      const url = `http://192.168.1.21:7011/api/v1/candidates?stage=${newStage}`;
+      const url = `http://localhost:7011/api/v1/candidates?stage=${newStage}`;
       axios
         .get(url)
         .then((response) => {
@@ -148,7 +142,7 @@ export default {
     },
     get_hiring_stages() {
       axios
-        .get('http://192.168.1.21:7011/api/v1/hiring_stages')
+        .get('http://localhost:7011/api/v1/hiring_stages')
         .then((response) => {
           // console.log(response);
           this.hiring_stages = response.data.hiring_stages;
