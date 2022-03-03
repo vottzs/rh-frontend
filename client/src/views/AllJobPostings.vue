@@ -83,7 +83,7 @@
         small
         @filtered="onFiltered">
         <template #cell(title)="row">
-        <b-link href="http://localhost:8080/job_postings" @click="active_job_posting(row.item)">{{row.item.title}}</b-link>
+        <b-link :href="`http://localhost:8080/job_postings/${row.item._id}`">{{row.item.title}}</b-link>
         </template>
       </b-table>
   </div>
@@ -171,22 +171,6 @@ export default {
     },
   },
   methods: {
-    select_job_posting(jobPosting) {
-      this.selected_job_posting = jobPosting;
-    },
-    active_job_posting(jobPosting) {
-      this.select_job_posting(jobPosting);
-      const url = `http://localhost:7011/api/v1/job_postings/${this.selected_job_posting.title}`;
-      axios
-        .patch(url, { stage: this.activate_jobpostingvar });
-      alert('Você está sendo redirecionado');
-    },
-    reset_job_posting_stage(stage) {
-      this.activate_jobpostingvar = stage;
-      const url = `http://localhost:7011/api/v1/job_postings?stage=${stage}`;
-      axios
-        .post(url, { stage: this.activate_jobpostingvar });
-    },
     new_job_posting() {
       const url = 'http://localhost:7011/api/v1/job_postings';
       axios
@@ -218,7 +202,6 @@ export default {
   },
   created() {
     this.get_job_postings();
-    this.reset_job_posting_stage('active');
   },
 };
 </script>

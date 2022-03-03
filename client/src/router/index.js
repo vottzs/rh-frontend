@@ -30,7 +30,7 @@ const routes = [
     component: StaticJobPostings,
   },
   {
-    path: '/job_postings',
+    path: '/job_postings/:id',
     name: 'Job Postings',
     component: JobPostings,
   },

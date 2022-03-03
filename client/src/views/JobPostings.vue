@@ -190,7 +190,7 @@ export default {
       filter: null,
       filterOn: [],
       archive_cadidatevar: 'Archived',
-      activate_jobpostingvar: 'active',
+      url_data: '',
     };
   },
   computed: {
@@ -246,9 +246,9 @@ export default {
           this.hiring_stages = response.data.hiring_stages;
         });
     },
-    get_job_postings(stage) {
-      this.activate_jobpostingvar = stage;
-      const url = `http://localhost:7011/api/v1/job_postings/import/${stage}`;
+    get_job_postings() {
+      this.url_data = this.$route.params.id;
+      const url = `http://localhost:7011/api/v1/job_postings/${this.url_data}`;
       axios
         .get(url)
         .then((response) => {
@@ -260,6 +260,7 @@ export default {
     this.get_candidates('Applied');
     this.get_hiring_stages();
     this.get_job_postings('active');
+    this.get_url_id();
   },
 };
 </script>
