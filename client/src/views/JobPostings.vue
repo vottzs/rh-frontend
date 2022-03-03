@@ -117,17 +117,17 @@ export default {
       this.selected_candidate.stage = this.selected_hiring_stage;
       this.selected_hiring_stage = '';
     },
-    archive_candidate() {
+    archive_candidate(candidate) {
+      this.select_candidate(candidate);
+      this.selected_candidate.stage = 'Archived';
       const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
       axios
-        .patch(url, { stage: 'Archived' })
+        .patch(url, { stage: this.selected_candidate.stage })
         .then((response) => {
           if (response.data.status === 'success') {
             this.get_candidates(this.selected_tab);
           }
         });
-      this.selected_candidate.stage = 'Archived';
-      this.selected_hiring_stage = '';
       // this.select_candidate(candidate);
       // this.selected_candidate.stage = 'Archived';
       // this.candidates.splice(index, 1);
