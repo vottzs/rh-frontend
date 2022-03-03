@@ -50,7 +50,7 @@
         v-on:click="get_candidates(stage)">
           <b-table :items="candidates" :fields="fields" striped responsive="sm">
             <template #cell(actions)="row">
-              <b-button size="sm" class="mr-2" @click="archive_candidate(row.item, row.index)">
+              <b-button size="sm" class="mr-2" @click="archive_candidate(row.item)">
                 Archive
               </b-button>
               <b-button size="sm" class="mr-2"
@@ -117,10 +117,20 @@ export default {
       this.selected_candidate.stage = this.selected_hiring_stage;
       this.selected_hiring_stage = '';
     },
-    archive_candidate(candidate, index) {
-      this.select_candidate(candidate);
+    archive_candidate() {
+      const url = `http://localhost:7011/api/v1/candidates/${this.selected_candidate.id}`;
+      axios
+        .patch(url, { stage: 'Archived' })
+        .then((response) => {
+          if (response.data.status === 'success') {
+            this.get_candidates(this.selected_tab);
+          }
+        });
       this.selected_candidate.stage = 'Archived';
-      this.candidates.splice(index, 1);
+      this.selected_hiring_stage = '';
+      // this.select_candidate(candidate);
+      // this.selected_candidate.stage = 'Archived';
+      // this.candidates.splice(index, 1);
     },
     get_candidates(stage) {
       this.selected_tab = stage;
@@ -140,7 +150,7 @@ export default {
       axios
         .get('http://192.168.1.21:7011/api/v1/hiring_stages')
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           this.hiring_stages = response.data.hiring_stages;
         });
     },
