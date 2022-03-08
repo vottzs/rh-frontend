@@ -29,7 +29,9 @@
     <b-container fluid>
       <b-row class="text-center">
         <b-col md="3" class="py-3" align='left'>
-          <b-button v-b-modal.modal-create-new-job-posting>Create new job posting</b-button>
+          <b-button v-b-modal.modal-create-new-job-posting
+          @click="get_benefits(), get_hiring_types(), get_offices()">
+          Create new job posting</b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -48,21 +50,22 @@
         ></b-form-textarea></p>
       <p class="my-4">
         <b>Office:</b>
-        <b-form-input v-model="new_job_posting_var.office" placeholder="Enter job office">
-      </b-form-input></p>
+        <b-form-select v-model="new_job_posting_var.office_id" :options="offices"
+        value-field="_id" text-field="title"
+        class="form-select">
+        </b-form-select></p>
       <p class="my-4">
         <b>Hiring Type:</b>
-        <b-form-input v-model="new_job_posting_var.hiring_type" placeholder="Enter job hiring type">
-      </b-form-input></p>
+        <b-form-select v-model="new_job_posting_var.hiring_type_id" :options="hiring_types"
+        value-field="_id" text-field="name"
+        class="form-select">
+        </b-form-select></p>
       <p class="my-4">
         <b>Benefits:</b>
-        <b-form-textarea
-          id="textarea"
-          v-model="new_job_posting_var.benefits"
-          placeholder="Enter job benefits"
-          rows="3"
-          max-rows="6"
-        ></b-form-textarea></p>
+        <b-form-select v-model="new_job_posting_var.benefits_ids" :options="benefits"
+        multiple :select-size="4" value-field="_id" text-field="name"
+        class="form-select">
+        </b-form-select></p>
       <p class="my-4">
         <b>Salary Max:</b>
         <b-form-input v-model="new_job_posting_var.salary_max" placeholder="Enter salary max">
@@ -98,12 +101,13 @@ export default {
       new_job_posting_var: {
         title: '',
         description: '',
-        office: '',
-        hiring_type: '',
-        benefits: '',
+        office_id: '',
+        hiring_type_id: '',
+        benefits_ids: [],
         salary_max: '',
         salary_min: '',
-        stage: 'inactive',
+        hiring_stage: 'Published',
+        candidates: [],
       },
       fields: [
         {
@@ -149,7 +153,17 @@ export default {
           class: 'text-center',
         },
       ],
+      selected_office: '',
+      offices: [
+      ],
+      selected_hiring_type: '',
+      hiring_types: [
+      ],
       job_postings: [
+      ],
+      selected_benefits: [
+      ],
+      benefits: [
       ],
       selected_job_posting: {
       },
@@ -197,6 +211,30 @@ export default {
         .get(url)
         .then((response) => {
           this.job_postings = response.data.job_postings;
+        });
+    },
+    get_offices() {
+      const url = 'http://localhost:7011/api/v1/offices';
+      axios
+        .get(url)
+        .then((response) => {
+          this.offices = response.data.offices;
+        });
+    },
+    get_hiring_types() {
+      const url = 'http://localhost:7011/api/v1/hiring_types';
+      axios
+        .get(url)
+        .then((response) => {
+          this.hiring_types = response.data.hiring_types;
+        });
+    },
+    get_benefits() {
+      const url = 'http://localhost:7011/api/v1/benefits';
+      axios
+        .get(url)
+        .then((response) => {
+          this.benefits = response.data.benefits;
         });
     },
   },
