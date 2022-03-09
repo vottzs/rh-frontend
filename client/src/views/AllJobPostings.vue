@@ -51,7 +51,7 @@
       <p class="my-4">
         <b>Office:</b>
         <b-form-select v-model="new_job_posting_var.office_id" :options="offices"
-        value-field="_id" text-field="title"
+        value-field="_id" text-field="name"
         class="form-select">
         </b-form-select></p>
       <p class="my-4">

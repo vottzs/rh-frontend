@@ -9,8 +9,8 @@
     </b-container>
     <b-modal id="modal-create-new-office" :title="'Create new office'" ok-title="Create"
     @ok="new_office()">
-      <p class="my-4"><b>Title:</b> <b-form-input v-model="new_office_var.title"
-      placeholder="Enter office title"></b-form-input></p>
+      <p class="my-4"><b>Name:</b> <b-form-input v-model="new_office_var.name"
+      placeholder="Enter office name"></b-form-input></p>
       <p class="my-4">
         <b>Address:</b>
         <b-form-input v-model="new_office_var.address" placeholder="Enter office address">
@@ -39,13 +39,13 @@ export default {
   data() {
     return {
       new_office_var: {
-        title: '',
+        name: '',
         address: '',
       },
       fields: [
         {
-          key: 'title',
-          label: 'Title',
+          key: 'name',
+          label: 'Name',
           sortable: true,
           sortDirection: 'desc',
         },
