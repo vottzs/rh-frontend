@@ -172,8 +172,6 @@ export default {
       sortDirection: 'asc',
       filter: null,
       filterOn: [],
-      activate_jobpostingvar: 'active',
-      deactivate_jobpostingvar: 'inactive',
     };
   },
   computed: {

@@ -7,6 +7,7 @@ import Offices from '../views/Offices.vue';
 import Benefits from '../views/Benefits.vue';
 import HiringTypes from '../views/HiringTypes.vue';
 import AllJobPostings from '../views/AllJobPostings.vue';
+import SignUp from '../views/SignUp.vue';
 
 Vue.use(VueRouter);
 
@@ -53,6 +54,11 @@ const routes = [
     path: '/all_job_postings',
     name: 'All Job Postings',
     component: AllJobPostings,
+  },
+  {
+    path: '/sign_up',
+    name: 'Sign Up',
+    component: SignUp,
   },
 ];
 
